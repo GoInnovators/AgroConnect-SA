@@ -23,3 +23,8 @@ jobs:
 
       - name: Deploy
         run: npm run deploy
+         with:
+          branch: gh-pages
+          folder: build
+          token: ${{ secrets.GITHUB_TOKEN }}
+
