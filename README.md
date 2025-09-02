@@ -4,6 +4,8 @@ AgroConnect SA is an AI-powered agricultural marketplace designed specifically f
 Weekly goal:
 
 Week 1
+---------------------------------------------------------------------------------------------------
+(What each file does)
 
 backend/
 ├── src/                          # MAIN SOURCE CODE DIRECTORY
@@ -77,10 +79,10 @@ backend/
 │   │                             # - /api/ai/price-suggestion
 │   │                             # - /api/ai/grade-image
 │   │                             # - /api/ai/demand-forecast
+-----------------------------------------------------------------------------------------------
 
 
-
-
+(what is required to be installed for each file)
 
 backend/                          # REQUIRES: Python 3.8+, PostgreSQL 12+
 ├── src/
@@ -102,3 +104,4 @@ backend/                          # REQUIRES: Python 3.8+, PostgreSQL 12+
 │   │   ├── crops.py              # REQUIRES: FastAPI, pydantic
 │   │   ├── farmers.py            # REQUIRES: FastAPI, pydantic
 │   │   └── ai.py                 # REQUIRES: FastAPI, scikit-learn, 
+----------------------------------------------------------------------------------------------------------
