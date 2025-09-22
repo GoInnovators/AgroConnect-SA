@@ -23,6 +23,7 @@ import {
   Pause,
   Download
 } from 'lucide-react';
+import LocationMap from '@/components/Map/LocationMap';
 
 const Channels = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -146,7 +147,7 @@ const Channels = () => {
 
         {/* Main Content Tabs */}
         <Tabs defaultValue="providers" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-2 lg:w-[400px] mx-auto">
+             <TabsList className="grid w-full grid-cols-3 lg:w-[600px] mx-auto">
             <TabsTrigger value="providers" className="flex items-center space-x-2">
               <Shield className="h-4 w-4" />
               <span>Security & Insurance</span>
@@ -154,6 +155,10 @@ const Channels = () => {
             <TabsTrigger value="drone" className="flex items-center space-x-2">
               <Plane className="h-4 w-4" />
               <span>Drone Monitoring</span>
+               </TabsTrigger>
+            <TabsTrigger value="map" className="flex items-center space-x-2">
+              <MapPin className="h-4 w-4" />
+              <span>Provider Locations</span>
             </TabsTrigger>
           </TabsList>
 
@@ -304,7 +309,7 @@ const Channels = () => {
               </div>
             )}
 
-            {/* Map Section Placeholder */}
+           {/* Map Section with LocationMap Component */}
             <Card className="agri-card animate-slide-up" style={{ animationDelay: '400ms' }}>
               <CardHeader>
                 <CardTitle className="flex items-center">
@@ -313,15 +318,7 @@ const Channels = () => {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="h-64 bg-muted/30 rounded-lg flex items-center justify-center">
-                  <div className="text-center">
-                    <MapPin className="h-12 w-12 text-muted-foreground mx-auto mb-2" />
-                    <p className="text-muted-foreground">Interactive map coming soon</p>
-                    <p className="text-sm text-muted-foreground mt-1">
-                      View provider locations and delivery routes
-                    </p>
-                  </div>
-                </div>
+                <LocationMap providers={filteredProviders} />
               </CardContent>
             </Card>
           </TabsContent>
@@ -452,6 +449,69 @@ const Channels = () => {
                 </div>
               </CardContent>
             </Card>
+            </TabsContent>
+          {/* Provider Locations Map */}
+          <TabsContent value="map" className="space-y-6">
+            <div className="grid gap-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center space-x-2">
+                    <MapPin className="w-5 h-5 text-primary" />
+                    <span>Provider Locations Map</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <LocationMap providers={filteredProviders} />
+                </CardContent>
+              </Card>
+              
+              <div className="grid md:grid-cols-2 gap-4">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Location Statistics</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-3">
+                      <div className="flex justify-between">
+                        <span>Total Providers</span>
+                        <span className="font-semibold">{filteredProviders.length}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Insurance Providers</span>
+                        <span className="font-semibold">
+                          {filteredProviders.filter(p => p.type === 'insurance').length}
+                        </span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Logistics Providers</span>
+                        <span className="font-semibold">
+                          {filteredProviders.filter(p => p.type === 'logistics').length}
+                        </span>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+                
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Coverage Areas</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-2">
+                      {Array.from(new Set(filteredProviders.map(p => p.location))).map(location => (
+                        <div key={location} className="flex items-center space-x-2">
+                          <MapPin className="w-4 h-4 text-muted-foreground" />
+                          <span className="text-sm">{location}</span>
+                          <Badge variant="secondary" className="text-xs">
+                            {filteredProviders.filter(p => p.location === location).length}
+                          </Badge>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
           </TabsContent>
         </Tabs>
       </div>

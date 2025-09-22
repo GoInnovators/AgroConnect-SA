@@ -202,9 +202,8 @@ const Auth = () => {
                         <SelectValue placeholder="Select your role" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="farmer">Farmer (Primary User)</SelectItem>
-                        <SelectItem value="buyer">Buyer (Enterprise)</SelectItem>
-                        <SelectItem value="admin">Admin (Super User)</SelectItem>
+                        <SelectItem value="farmer">Farmer </SelectItem>
+                        <SelectItem value="buyer">Buyer </SelectItem>
                       </SelectContent>
                     </Select>
                   </div>

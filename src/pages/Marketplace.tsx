@@ -14,6 +14,14 @@ import {
   Filter
 } from 'lucide-react';
 
+// Import product images
+import tomatoesImg from '@/assets/tomatoes.jpg';
+import maizeImg from '@/assets/maize.jpg';
+import carrotsImg from '@/assets/carrots.jpg';
+import lettuceImg from '@/assets/lettuce.jpg';
+import potatoesImg from '@/assets/potatoes.jpg';
+import spinachImg from '@/assets/spinach.jpg';
+
 interface Product {
   id: string;
   name: string;
@@ -52,7 +60,7 @@ const Marketplace = () => {
       verified: true,
       harvestDate: '2024-01-15',
       description: 'Fresh organic tomatoes, pesticide-free, perfect for retail',
-      image: 'tomatoes'
+       image: tomatoesImg
     },
     {
       id: '2',
@@ -68,55 +76,71 @@ const Marketplace = () => {
       verified: true,
       harvestDate: '2024-01-10',
       description: 'Grade 1 yellow maize, moisture content 12.5%',
-      image: 'maize'
+      image: maizeImg
     },
     {
       id: '3',
-      name: 'Free-Range Eggs',
+       name: 'Fresh Carrots',
       farmer: 'Maria Santos',
       location: 'Western Cape',
-      category: 'livestock',
+      category: 'vegetables',
       qualityGrade: 'A+',
-      price: 2.80,
-      unit: 'dozen',
-      quantity: '200 dozen available',
+       price: 18.25,
+      unit: 'kg',
+      quantity: '300kg available',
       rating: 4.8,
       verified: true,
       harvestDate: '2024-01-16',
-      description: 'Fresh free-range eggs from pasture-raised hens',
-      image: 'eggs'
+      description: 'Fresh organic carrots with excellent nutritional value',
+      image: carrotsImg
     },
     {
       id: '4',
-      name: 'Avocados',
+      name: 'Organic Lettuce',
       farmer: 'David Ntuli',
       location: 'Limpopo',
-      category: 'fruits',
+      category: 'vegetables',
       qualityGrade: 'A',
-      price: 28.00,
+      price: 15.00,
       unit: 'kg',
-      quantity: '300kg available',
+      quantity: '200kg available',
       rating: 4.6,
       verified: true,
       harvestDate: '2024-01-12',
-      description: 'Premium Hass avocados, export quality',
-      image: 'avocados'
+       description: 'Fresh organic lettuce, perfect for salads and sandwiches',
+      image: lettuceImg
     },
     {
       id: '5',
-      name: 'Butternut Squash',
+       name: 'Quality Potatoes',
       farmer: 'Grace Mokoena',
       location: 'Gauteng',
       category: 'vegetables',
       qualityGrade: 'B+',
-      price: 8.50,
+      price: 12.50,
       unit: 'kg',
       quantity: '150kg available',
       rating: 4.4,
       verified: false,
       harvestDate: '2024-01-14',
-      description: 'Fresh butternut squash, great for local markets',
-      image: 'butternut'
+      description: 'Quality potatoes suitable for various cooking methods',
+      image: potatoesImg
+    },
+    {
+      id: '6',
+      name: 'Fresh Spinach',
+      farmer: 'Peter Mokaba',
+      location: 'Mpumalanga',
+      category: 'vegetables',
+      qualityGrade: 'A+',
+      price: 22.00,
+      unit: 'kg',
+      quantity: '100kg available',
+      rating: 4.7,
+      verified: true,
+      harvestDate: '2024-01-16',
+      description: 'Fresh, nutrient-rich spinach leaves',
+      image: spinachImg
     }
   ];
 
@@ -220,7 +244,22 @@ const Marketplace = () => {
         {/* Products Grid */}
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {filteredProducts.map((product) => (
-            <Card key={product.id} className="agri-card hover:shadow-glow transition-all duration-300">
+            <Card key={product.id} className="agri-card hover:shadow-glow transition-all duration-300 overflow-hidden">
+              <div className="aspect-video relative overflow-hidden">
+                <img 
+                  src={product.image} 
+                  alt={product.name}
+                  className="w-full h-full object-cover"
+                />
+                {product.verified && (
+                  <div className="absolute top-2 right-2">
+                    <Badge className="bg-green-100 text-green-800 border-green-200">
+                      <Shield className="h-3 w-3 mr-1" />
+                      Verified
+                    </Badge>
+                  </div>
+                )}
+              </div>
               <CardHeader className="pb-3">
                 <div className="flex justify-between items-start">
                   <div>
