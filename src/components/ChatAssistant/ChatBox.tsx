@@ -26,32 +26,52 @@ const ChatBox = () => {
   const [isTyping, setIsTyping] = useState(false);
 
   const handleSendMessage = async () => {
-    if (!inputValue.trim()) return;
+  if (!inputValue.trim()) return;
 
-    const userMessage: Message = {
-      id: Date.now().toString(),
-      content: inputValue,
-      sender: 'user',
+  const userMessage: Message = {
+    id: Date.now().toString(),
+    content: inputValue,
+    sender: 'user',
+    timestamp: new Date()
+  };
+
+  setMessages(prev => [...prev, userMessage]);
+  setInputValue('');
+  setIsTyping(true);
+
+  try {
+    const res = await fetch('/ai/chat', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ message: inputValue })
+    });
+
+    const data = await res.json();
+
+    const botMessage: Message = {
+      id: (Date.now() + 1).toString(),
+      content: data.response || 'Sorry, I did not understand that.',
+      sender: 'bot',
       timestamp: new Date()
     };
 
-    setMessages(prev => [...prev, userMessage]);
-    setInputValue('');
-    setIsTyping(true);
+    setMessages(prev => [...prev, botMessage]);
+  } catch (error) {
+    console.error('Chat API Error:', error);
+    const botMessage: Message = {
+      id: (Date.now() + 1).toString(),
+      content: 'Something went wrong. Please try again later.',
+      sender: 'bot',
+      timestamp: new Date()
+    };
+    setMessages(prev => [...prev, botMessage]);
+  } finally {
+    setIsTyping(false);
+  }
+};
 
-    // TODO: integrate AI chatbot / support bot API here
-    // Simulate bot response
-    setTimeout(() => {
-      const botMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        content: `I understand you're asking about "${inputValue}". Let me help you with that. This is a placeholder response - the actual AI integration will provide detailed agricultural assistance.`,
-        sender: 'bot',
-        timestamp: new Date()
-      };
-      setMessages(prev => [...prev, botMessage]);
-      setIsTyping(false);
-    }, 1500);
-  };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
