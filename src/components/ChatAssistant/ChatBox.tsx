@@ -40,7 +40,7 @@ const ChatBox = () => {
   setIsTyping(true);
 
   try {
-    const res = await fetch('/ai/chat', {
+    const res = await fetch('https://agroapi.netlify.app/v1/ai/chat', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
