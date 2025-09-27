@@ -1,28 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  Search,
-  Star,
-  MapPin,
-  Truck,
-  Shield,
-  Clock,
-  Filter,
-} from "lucide-react";
-
-import { supabase } from "@/lib/utils";
-import { categories } from "@/lib/constants";
+import { Star, MapPin, Shield, Filter } from "lucide-react";
 import { Link } from "react-router-dom";
+
+import { getLocation } from "@/lib/utils";
+import { categories } from "@/lib/constants";
 import { farmers } from "@/lib/demoData";
 
 const MarketplaceCategory = () => {
@@ -30,30 +14,70 @@ const MarketplaceCategory = () => {
   const [categoryFilter, setCategoryFilter] = useState("all");
   const [qualityFilter, setQualityFilter] = useState("all");
   const [locationFilter, setLocationFilter] = useState("all");
+  const [userLocation, setUserLocation] = useState(null);
+  const [sortedFarmers, setSortedFarmers] = useState(farmers);
 
+  // Get user location
   useEffect(() => {
+    setUserLocation(getLocation());
+
     const pathname = window.location.pathname;
     const category = pathname.substring(pathname.lastIndexOf("/") + 1);
     setCategoryFilter(category);
-  });
+  }, []);
 
-  const filteredfarmers = farmers.filter((farmer) => {
-    const matchesSearch =
-      farmer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      farmer.farmer.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory =
-      categoryFilter === "all" || farmer.category === categoryFilter;
-    const matchesQuality =
-      qualityFilter === "all" || farmer.qualityGrade === qualityFilter;
-    const matchesLocation =
-      locationFilter === "all" || farmer.location === locationFilter;
+  // Haversine formula to calculate distance in km
+  const getDistanceFromLatLonInKm = (lat1, lon1, lat2, lon2) => {
+    const R = 6371; // Radius of the earth in km
+    const dLat = ((lat2 - lat1) * Math.PI) / 180;
+    const dLon = ((lon2 - lon1) * Math.PI) / 180;
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos((lat1 * Math.PI) / 180) *
+        Math.cos((lat2 * Math.PI) / 180) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const d = R * c; // Distance in km
+    console.log(d);
+    return d;
+  };
 
-    return (
-      matchesSearch && matchesCategory && matchesQuality && matchesLocation
-    );
-  });
+  // Filter and sort farmers based on user location and filters
+  useEffect(() => {
+    if (!userLocation) return;
 
-  const getQualityColor = (grade: string) => {
+    const filtered = farmers
+      .filter((farmer) => {
+        const matchesSearch =
+          farmer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          farmer.farmer.toLowerCase().includes(searchTerm.toLowerCase());
+        const matchesCategory =
+          categoryFilter === "all" || farmer.category === categoryFilter;
+        const matchesQuality =
+          qualityFilter === "all" || farmer.qualityGrade === qualityFilter;
+        const matchesLocation =
+          locationFilter === "all" || farmer.location === locationFilter;
+
+        return (
+          matchesSearch && matchesCategory && matchesQuality && matchesLocation
+        );
+      })
+      .map((farmer) => ({
+        ...farmer,
+        distance: getDistanceFromLatLonInKm(
+          userLocation.lat,
+          userLocation.lon,
+          farmer.lat,
+          farmer.lon
+        ),
+      }))
+      .sort((a, b) => a.distance - b.distance);
+
+    setSortedFarmers(filtered);
+  }, [userLocation, searchTerm, categoryFilter, qualityFilter, locationFilter]);
+
+  const getQualityColor = (grade) => {
     switch (grade) {
       case "A+":
         return "bg-green-100 text-green-800 border-green-200";
@@ -74,7 +98,7 @@ const MarketplaceCategory = () => {
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold mb-2">
-            {categories.find((cat) => cat.key == categoryFilter)?.value}
+            {categories.find((cat) => cat.key === categoryFilter)?.value}
           </h1>
           <p className="text-muted-foreground">
             Discover quality farmers from verified farmers across South Africa
@@ -84,14 +108,14 @@ const MarketplaceCategory = () => {
         {/* Results Count */}
         <div className="mb-6">
           <p className="text-muted-foreground">
-            Showing {filteredfarmers.length} farmer
-            {filteredfarmers.length !== 1 ? "s" : ""}
+            Showing {sortedFarmers.length} farmer
+            {sortedFarmers.length !== 1 ? "s" : ""}
           </p>
         </div>
 
         {/* farmers Grid */}
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {filteredfarmers.map((farmer) => (
+          {sortedFarmers.map((farmer) => (
             <Card
               key={farmer.id}
               className="agri-card hover:shadow-glow transition-all duration-300 overflow-hidden"
@@ -134,6 +158,11 @@ const MarketplaceCategory = () => {
                     <Star className="h-4 w-4 text-yellow-500 fill-current" />
                     <span className="text-sm font-medium">{farmer.rating}</span>
                   </div>
+                  {farmer?.distance && (
+                    <span className="text-sm text-muted-foreground">
+                      {farmer?.distance.toFixed(2)} km away
+                    </span>
+                  )}
                 </div>
 
                 <p className="text-sm text-muted-foreground">
@@ -161,7 +190,7 @@ const MarketplaceCategory = () => {
           ))}
         </div>
 
-        {filteredfarmers.length === 0 && (
+        {sortedFarmers.length === 0 && (
           <div className="text-center py-12">
             <Filter className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
             <h3 className="text-lg font-semibold mb-2">No farmers found</h3>

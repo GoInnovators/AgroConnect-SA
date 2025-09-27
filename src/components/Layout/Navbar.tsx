@@ -21,8 +21,6 @@ const Navbar = () => {
     { name: "Home", path: "/" },
     { name: "Marketplace", path: "/marketplace" },
     { name: "Farmers Map", path: "/map" },
-    { name: "Weather", path: "/weather" },
-    { name: "Channels", path: "/channels" },
   ];
 
   const dashboardItems = [

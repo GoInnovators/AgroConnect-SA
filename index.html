@@ -8,6 +8,7 @@
     <meta name="author" content="GoInnovators" />
 
     <meta property="og:title" content="AgroConnect" />
+    <meta name="google" content="notranslate" />
     <meta property="og:description" content="Helping agricultural businesses grow through connections in the market" />
     <meta property="og:type" content="website" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
@@ -20,5 +21,16 @@
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+    <div id="google_translate_element" class="fixed bottom-0 left-0"></div>
+    <script type="text/javascript">
+      function googleTranslateElementInit() {
+        new google.translate.TranslateElement(
+          { pageLanguage: 'en' },
+          'google_translate_element'
+        );
+      }
+    </script>
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit">
+    </script>
   </body>
 </html>

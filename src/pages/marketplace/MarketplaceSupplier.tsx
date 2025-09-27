@@ -18,6 +18,7 @@ import {
   Shield,
   Clock,
   Filter,
+  ShoppingCart,
 } from "lucide-react";
 
 // Import product images
@@ -29,6 +30,7 @@ import potatoesImg from "@/assets/potatoes.jpg";
 import spinachImg from "@/assets/spinach.jpg";
 import { supabase } from "@/lib/utils";
 import { farmers } from "@/lib/demoData";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 
 interface Product {
   id: string;
@@ -52,6 +54,36 @@ const MarketplaceSupplier = () => {
   const [categoryFilter, setCategoryFilter] = useState("all");
   const [qualityFilter, setQualityFilter] = useState("all");
   const [locationFilter, setLocationFilter] = useState("all");
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [modal, setModal] = useState({ name });
+
+  const showModal = (name) => {
+    setModal({ name: name });
+    setModalIsOpen(true);
+  };
+
+  // Cart state and quantity state
+  const [cart, setCart] = useState<{ product: Product; quantity: number }[]>(
+    []
+  );
+  const [quantities, setQuantities] = useState<{ [key: string]: number }>({});
+
+  // Add to cart handler
+  const handleAddToCart = (product: Product) => {
+    const qty = quantities[product.id] || 1;
+    setCart((prev) => {
+      const existing = prev.find((item) => item.product.id === product.id);
+      if (existing) {
+        return prev.map((item) =>
+          item.product.id === product.id
+            ? { ...item, quantity: item.quantity + qty }
+            : item
+        );
+      }
+      return [...prev, { product, quantity: qty }];
+    });
+    setQuantities((prev) => ({ ...prev, [product.id]: 1 })); // Reset quantity
+  };
 
   const products: Product[] = [
     {
@@ -190,7 +222,7 @@ const MarketplaceSupplier = () => {
     const farmerId = pathname.substring(pathname.lastIndexOf("/") + 1);
     const farm = farmers.find((farmer) => farmer.id == farmerId);
     setFarmer(farm);
-  });
+  }, []);
 
   return (
     <div className="min-h-screen bg-background pt-20 pb-8">
@@ -301,47 +333,62 @@ const MarketplaceSupplier = () => {
                   {product.description}
                 </p>
 
-                <div className="flex items-center space-x-4 text-sm text-muted-foreground">
+                <div className="flex items-center space-x-4 justify-between text-sm text-muted-foreground">
                   <div className="flex items-center space-x-1">
                     <MapPin className="h-4 w-4" />
                     <span>{product.location}</span>
                   </div>
                   <div className="flex items-center space-x-1">
                     <Clock className="h-4 w-4" />
-                    <span>Harvested {product.harvestDate}</span>
+                    <span>Bid by {product.harvestDate}</span>
                   </div>
                 </div>
 
                 <div className="pt-2 border-t">
                   <div className="flex justify-between items-center mb-3">
                     <div>
-                      <p className="text-2xl font-bold text-primary">
-                        R{product.price}
+                      <p className="text-xl font-bold text-primary">
+                        Current Bid R{product.price}
                         <span className="text-sm font-normal text-muted-foreground">
                           /{product.unit}
                         </span>
                       </p>
-                      <p className="text-sm text-muted-foreground">
-                        {product.quantity}
-                      </p>
+                    </div>
+                    {/* Quantity selector and Add to Cart button */}
+                    <div className="flex items-center space-x-2">
+                      <Button
+                        onClick={() => showModal(product.name)}
+                        variant="default"
+                      >
+                        <ShoppingCart className="h-4 w-4 mr-1" />
+                        Bid
+                      </Button>
                     </div>
                   </div>
                 </div>
               </CardContent>
             </Card>
           ))}
-        </div>
 
-        {filteredProducts.length === 0 && (
-          <div className="text-center py-12">
-            <Filter className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-            <h3 className="text-lg font-semibold mb-2">No products found</h3>
-            <p className="text-muted-foreground">
-              Try adjusting your search or filter criteria
-            </p>
-          </div>
-        )}
+          {filteredProducts.length === 0 && (
+            <div className="text-center py-12">
+              <Filter className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+              <h3 className="text-lg font-semibold mb-2">No products found</h3>
+              <p className="text-muted-foreground">
+                Try adjusting your search or filter criteria
+              </p>
+            </div>
+          )}
+        </div>
       </div>
+
+      <Dialog open={modalIsOpen}>
+        <DialogTitle>{modal.name}</DialogTitle>
+        <DialogContent>
+          <Input placeholder="Price" type="number" />
+          <Button onClick={() => setModalIsOpen(false)}>Submit Bid</Button>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

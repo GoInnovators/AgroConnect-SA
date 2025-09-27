@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -32,8 +32,11 @@ import {
   Tooltip,
   Legend,
 } from "recharts";
+import { getLocation } from "@/lib/utils";
+import Weather from "../Weather";
 
 const FarmerDashboard = () => {
+  const [dashboardData, setDashboardData] = useState({ soil: "" });
   const [showAddRecord, setShowAddRecord] = useState(false);
   const [newRecord, setNewRecord] = useState({
     type: "yield",
@@ -113,9 +116,44 @@ const FarmerDashboard = () => {
     },
   ];
 
+  const getSoilType = async ({ lat, lon }: { lat: number; lon: number }) => {
+    try {
+      const response = await fetch(
+        "https://api.openepi.io/soil/type?" +
+          new URLSearchParams({
+            lon: lon.toString(),
+            lat: lat.toString(),
+          })
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch soil type");
+      }
+
+      const json = await response.json();
+
+      setDashboardData((prev) => ({
+        ...prev,
+        soil: json.properties?.most_probable_soil_type || "Unknown",
+      }));
+    } catch (err) {
+      console.error("Error fetching soil type:", err);
+    }
+  };
+
+  // Dummy location getter (replace with navigator.geolocation or your logic)
+  const getLocation = async () => {
+    return { lat: -25.7479, lon: 28.2293 }; // Example: Pretoria, SA
+  };
+
+  useEffect(() => {
+    (async () => {
+      const { lat, lon } = await getLocation();
+      await getSoilType({ lat, lon });
+    })();
+  }, []);
   const handleAddRecord = () => {
     // Add logic to save the record
-    console.log("Adding record:", newRecord);
     setNewRecord({
       type: "yield",
       crop: "",
@@ -402,25 +440,10 @@ const FarmerDashboard = () => {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <Card className="agri-card">
                 <CardHeader>
-                  <CardTitle>Revenue Trends</CardTitle>
+                  <CardTitle>Weather</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <ResponsiveContainer width="100%" height={300}>
-                    <AreaChart data={yieldData}>
-                      <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis dataKey="month" />
-                      <YAxis />
-                      <Tooltip />
-                      <Area
-                        type="monotone"
-                        dataKey="tomatoes"
-                        stackId="1"
-                        stroke="hsl(var(--primary))"
-                        fill="hsl(var(--primary))"
-                        fillOpacity={0.3}
-                      />
-                    </AreaChart>
-                  </ResponsiveContainer>
+                  <Weather />
                 </CardContent>
               </Card>
 

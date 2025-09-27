@@ -36,7 +36,7 @@ const Weather = () => {
     const req = await fetch("https://agroapi.netlify.app/v1/ai/chat", {
       method: "POST",
       body: JSON.stringify({
-        message: `Provide your brief insights to the farmer as first person using the following weather input: ${JSON.stringify(
+        message: `Provide your brief insights to the farmer as 2nd person using the following weather input: ${JSON.stringify(
           weatherData
         )}, if weather input is null, give valuable insights
         currentPage: ${
@@ -147,14 +147,24 @@ const Weather = () => {
   }
 
   const getWeather = async () => {
-    const req = await fetch(
-      `https://api.agromonitoring.com/agro/1.0/weather/forecast?lat=-25.859829368878614&lon=28.186168337614525&appid=${
-        import.meta.env.VITE_AGRO_API_KEY
-      }`
-    );
-    const res = await req.json();
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          const { latitude, longitude } = position.coords;
+          const req = await fetch(
+            `https://api.agromonitoring.com/agro/1.0/weather/forecast?lat=${latitude}&lon=${longitude}&appid=${
+              import.meta.env.VITE_AGRO_API_KEY
+            }`
+          );
+          const res = await req.json();
 
-    setWeatherData(groupForecastByDay(res));
+          setWeatherData(groupForecastByDay(res));
+        },
+        () => {
+          console.warn("Geolocation permission denied or unavailable");
+        }
+      );
+    }
   };
 
   const getWeatherIcon = (condition: string) => {
@@ -328,79 +338,6 @@ const Weather = () => {
                 </div>
               </CardContent>
             </Card>
-
-            {/* Agricultural Insights & Seasonal Predictions */}
-            <div className="grid md:grid-cols-2 gap-6 mt-6">
-              <Card
-                className="agri-card animate-slide-up"
-                style={{ animationDelay: "300ms" }}
-              >
-                <CardHeader>
-                  <CardTitle className="flex items-center">
-                    <Sun className="mr-2 h-5 w-5 text-primary" />
-                    Agricultural Insights
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <MarkdownDisplay markdown={agriInsights} />
-                </CardContent>
-              </Card>
-
-              <Card
-                className="agri-card animate-slide-up"
-                style={{ animationDelay: "400ms" }}
-              >
-                <CardHeader>
-                  <CardTitle className="flex items-center">
-                    <TrendingUp className="mr-2 h-5 w-5 text-primary" />
-                    Seasonal Predictions
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  {/* TODO: integrate seasonal weather prediction APIs here */}
-                  <div className="space-y-4">
-                    <div className="p-4 bg-gradient-to-r from-orange-50 to-red-50 dark:from-orange-900/20 dark:to-red-900/20 rounded-lg border-l-4 border-orange-500">
-                      <div className="flex items-center mb-2">
-                        <Sun className="h-4 w-4 text-orange-500 mr-2" />
-                        <span className="font-medium text-sm">
-                          Summer Outlook
-                        </span>
-                      </div>
-                      <p className="text-sm text-muted-foreground">
-                        Above-average temperatures expected. Plan for increased
-                        irrigation needs.
-                      </p>
-                    </div>
-
-                    <div className="p-4 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-lg border-l-4 border-blue-500">
-                      <div className="flex items-center mb-2">
-                        <CloudRain className="h-4 w-4 text-blue-500 mr-2" />
-                        <span className="font-medium text-sm">
-                          Rainfall Forecast
-                        </span>
-                      </div>
-                      <p className="text-sm text-muted-foreground">
-                        Normal to above-normal rainfall predicted for next 3
-                        months.
-                      </p>
-                    </div>
-
-                    <div className="p-4 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-lg border-l-4 border-green-500">
-                      <div className="flex items-center mb-2">
-                        <TrendingDown className="h-4 w-4 text-green-500 mr-2" />
-                        <span className="font-medium text-sm">
-                          Growing Season
-                        </span>
-                      </div>
-                      <p className="text-sm text-muted-foreground">
-                        Extended growing season likely due to favorable
-                        conditions.
-                      </p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
 
             {/* Risk Assessment - Worst Case Scenarios */}
             <Card

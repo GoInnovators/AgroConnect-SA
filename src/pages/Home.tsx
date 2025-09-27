@@ -64,7 +64,7 @@ const Home = () => {
               Empowering Smallholder Farmers with AI
             </h1>
             <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-3xl mx-auto">
-              AgriAI Connect bridges the gap between farmers and markets through
+              AgroConnect bridges the gap between farmers and markets through
               intelligent forecasting, quality grading, and optimized logistics
               solutions
             </p>
