@@ -206,31 +206,20 @@ const MarketplaceSupplier = () => {
         {/* Search and Filters */}
         <Card className="mb-6">
           <CardContent className="p-6">
+            <p>Filter</p>
+
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
               <div className="lg:col-span-2">
                 <div className="relative">
                   <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                   <Input
-                    placeholder="Search products or farmers..."
+                    placeholder="Search products..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     className="pl-10"
                   />
                 </div>
               </div>
-
-              <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Category" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Categories</SelectItem>
-                  <SelectItem value="vegetables">Vegetables</SelectItem>
-                  <SelectItem value="fruits">Fruits</SelectItem>
-                  <SelectItem value="grains">Grains</SelectItem>
-                  <SelectItem value="livestock">Livestock</SelectItem>
-                </SelectContent>
-              </Select>
 
               <Select value={qualityFilter} onValueChange={setQualityFilter}>
                 <SelectTrigger>
@@ -242,20 +231,6 @@ const MarketplaceSupplier = () => {
                   <SelectItem value="A">Grade A</SelectItem>
                   <SelectItem value="B+">Grade B+</SelectItem>
                   <SelectItem value="B">Grade B</SelectItem>
-                </SelectContent>
-              </Select>
-
-              <Select value={locationFilter} onValueChange={setLocationFilter}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Location" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Locations</SelectItem>
-                  <SelectItem value="KwaZulu-Natal">KwaZulu-Natal</SelectItem>
-                  <SelectItem value="Free State">Free State</SelectItem>
-                  <SelectItem value="Western Cape">Western Cape</SelectItem>
-                  <SelectItem value="Limpopo">Limpopo</SelectItem>
-                  <SelectItem value="Gauteng">Gauteng</SelectItem>
                 </SelectContent>
               </Select>
             </div>

@@ -49,8 +49,12 @@ const FarmersMap = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-background pt-20 p-6 flex items-center justify-center">
-      <div id="map" style={{ width: "100%", height: "500px" }}></div>
+    <div className="min-h-screen bg-background pt-14 flex items-center justify-center">
+      <div
+        id="map"
+        className="h-screen"
+        style={{ width: "100%", height: "600px" }}
+      ></div>
     </div>
   );
 };
