@@ -1,26 +1,34 @@
-import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { 
-  Search, 
-  Star, 
-  MapPin, 
-  Truck, 
+import React, { useEffect, useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Search,
+  Star,
+  MapPin,
+  Truck,
   Shield,
   Clock,
-  Filter
-} from 'lucide-react';
+  Filter,
+} from "lucide-react";
 
 // Import product images
-import tomatoesImg from '@/assets/tomatoes.jpg';
-import maizeImg from '@/assets/maize.jpg';
-import carrotsImg from '@/assets/carrots.jpg';
-import lettuceImg from '@/assets/lettuce.jpg';
-import potatoesImg from '@/assets/potatoes.jpg';
-import spinachImg from '@/assets/spinach.jpg';
+import tomatoesImg from "@/assets/tomatoes.jpg";
+import maizeImg from "@/assets/maize.jpg";
+import carrotsImg from "@/assets/carrots.jpg";
+import lettuceImg from "@/assets/lettuce.jpg";
+import potatoesImg from "@/assets/potatoes.jpg";
+import spinachImg from "@/assets/spinach.jpg";
+import { supabase } from "@/lib/utils";
+import { farmers } from "@/lib/demoData";
 
 interface Product {
   id: string;
@@ -28,7 +36,7 @@ interface Product {
   farmer: string;
   location: string;
   category: string;
-  qualityGrade: 'A+' | 'A' | 'B+' | 'B';
+  qualityGrade: "A+" | "A" | "B+" | "B";
   price: number;
   unit: string;
   quantity: string;
@@ -39,139 +47,159 @@ interface Product {
   image: string;
 }
 
-const Marketplace = () => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [categoryFilter, setCategoryFilter] = useState('all');
-  const [qualityFilter, setQualityFilter] = useState('all');
-  const [locationFilter, setLocationFilter] = useState('all');
+const MarketplaceSupplier = () => {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState("all");
+  const [qualityFilter, setQualityFilter] = useState("all");
+  const [locationFilter, setLocationFilter] = useState("all");
 
   const products: Product[] = [
     {
-      id: '1',
-      name: 'Organic Tomatoes',
-      farmer: 'Sarah Mthembu',
-      location: 'KwaZulu-Natal',
-      category: 'vegetables',
-      qualityGrade: 'A+',
-      price: 15.50,
-      unit: 'kg',
-      quantity: '500kg available',
+      id: "1",
+      name: "Organic Tomatoes",
+      farmer: "Sarah Mthembu",
+      location: "KwaZulu-Natal",
+      category: "vegetables",
+      qualityGrade: "A+",
+      price: 15.5,
+      unit: "kg",
+      quantity: "500kg available",
       rating: 4.9,
       verified: true,
-      harvestDate: '2024-01-15',
-      description: 'Fresh organic tomatoes, pesticide-free, perfect for retail',
-       image: tomatoesImg
+      harvestDate: "2024-01-15",
+      description: "Fresh organic tomatoes, pesticide-free, perfect for retail",
+      image: tomatoesImg,
     },
     {
-      id: '2',
-      name: 'Yellow Maize',
-      farmer: 'Johannes van der Merwe',
-      location: 'Free State',
-      category: 'grains',
-      qualityGrade: 'A',
-      price: 4.20,
-      unit: 'kg',
-      quantity: '2 tons available',
+      id: "2",
+      name: "Yellow Maize",
+      farmer: "Johannes van der Merwe",
+      location: "Free State",
+      category: "grains",
+      qualityGrade: "A",
+      price: 4.2,
+      unit: "kg",
+      quantity: "2 tons available",
       rating: 4.7,
       verified: true,
-      harvestDate: '2024-01-10',
-      description: 'Grade 1 yellow maize, moisture content 12.5%',
-      image: maizeImg
+      harvestDate: "2024-01-10",
+      description: "Grade 1 yellow maize, moisture content 12.5%",
+      image: maizeImg,
     },
     {
-      id: '3',
-       name: 'Fresh Carrots',
-      farmer: 'Maria Santos',
-      location: 'Western Cape',
-      category: 'vegetables',
-      qualityGrade: 'A+',
-       price: 18.25,
-      unit: 'kg',
-      quantity: '300kg available',
+      id: "3",
+      name: "Fresh Carrots",
+      farmer: "Maria Santos",
+      location: "Western Cape",
+      category: "vegetables",
+      qualityGrade: "A+",
+      price: 18.25,
+      unit: "kg",
+      quantity: "300kg available",
       rating: 4.8,
       verified: true,
-      harvestDate: '2024-01-16',
-      description: 'Fresh organic carrots with excellent nutritional value',
-      image: carrotsImg
+      harvestDate: "2024-01-16",
+      description: "Fresh organic carrots with excellent nutritional value",
+      image: carrotsImg,
     },
     {
-      id: '4',
-      name: 'Organic Lettuce',
-      farmer: 'David Ntuli',
-      location: 'Limpopo',
-      category: 'vegetables',
-      qualityGrade: 'A',
-      price: 15.00,
-      unit: 'kg',
-      quantity: '200kg available',
+      id: "4",
+      name: "Organic Lettuce",
+      farmer: "David Ntuli",
+      location: "Limpopo",
+      category: "vegetables",
+      qualityGrade: "A",
+      price: 15.0,
+      unit: "kg",
+      quantity: "200kg available",
       rating: 4.6,
       verified: true,
-      harvestDate: '2024-01-12',
-       description: 'Fresh organic lettuce, perfect for salads and sandwiches',
-      image: lettuceImg
+      harvestDate: "2024-01-12",
+      description: "Fresh organic lettuce, perfect for salads and sandwiches",
+      image: lettuceImg,
     },
     {
-      id: '5',
-       name: 'Quality Potatoes',
-      farmer: 'Grace Mokoena',
-      location: 'Gauteng',
-      category: 'vegetables',
-      qualityGrade: 'B+',
-      price: 12.50,
-      unit: 'kg',
-      quantity: '150kg available',
+      id: "5",
+      name: "Quality Potatoes",
+      farmer: "Grace Mokoena",
+      location: "Gauteng",
+      category: "vegetables",
+      qualityGrade: "B+",
+      price: 12.5,
+      unit: "kg",
+      quantity: "150kg available",
       rating: 4.4,
       verified: false,
-      harvestDate: '2024-01-14',
-      description: 'Quality potatoes suitable for various cooking methods',
-      image: potatoesImg
+      harvestDate: "2024-01-14",
+      description: "Quality potatoes suitable for various cooking methods",
+      image: potatoesImg,
     },
     {
-      id: '6',
-      name: 'Fresh Spinach',
-      farmer: 'Peter Mokaba',
-      location: 'Mpumalanga',
-      category: 'vegetables',
-      qualityGrade: 'A+',
-      price: 22.00,
-      unit: 'kg',
-      quantity: '100kg available',
+      id: "6",
+      name: "Fresh Spinach",
+      farmer: "Peter Mokaba",
+      location: "Mpumalanga",
+      category: "vegetables",
+      qualityGrade: "A+",
+      price: 22.0,
+      unit: "kg",
+      quantity: "100kg available",
       rating: 4.7,
       verified: true,
-      harvestDate: '2024-01-16',
-      description: 'Fresh, nutrient-rich spinach leaves',
-      image: spinachImg
-    }
+      harvestDate: "2024-01-16",
+      description: "Fresh, nutrient-rich spinach leaves",
+      image: spinachImg,
+    },
   ];
 
-  const filteredProducts = products.filter(product => {
-    const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         product.farmer.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = categoryFilter === 'all' || product.category === categoryFilter;
-    const matchesQuality = qualityFilter === 'all' || product.qualityGrade === qualityFilter;
-    const matchesLocation = locationFilter === 'all' || product.location === locationFilter;
-    
-    return matchesSearch && matchesCategory && matchesQuality && matchesLocation;
+  const filteredProducts = products.filter((product) => {
+    const matchesSearch =
+      product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      product.farmer.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesCategory =
+      categoryFilter === "all" || product.category === categoryFilter;
+    const matchesQuality =
+      qualityFilter === "all" || product.qualityGrade === qualityFilter;
+    const matchesLocation =
+      locationFilter === "all" || product.location === locationFilter;
+
+    return (
+      matchesSearch && matchesCategory && matchesQuality && matchesLocation
+    );
   });
 
   const getQualityColor = (grade: string) => {
     switch (grade) {
-      case 'A+': return 'bg-green-100 text-green-800 border-green-200';
-      case 'A': return 'bg-blue-100 text-blue-800 border-blue-200';
-      case 'B+': return 'bg-yellow-100 text-yellow-800 border-yellow-200';
-      case 'B': return 'bg-orange-100 text-orange-800 border-orange-200';
-      default: return 'bg-gray-100 text-gray-800 border-gray-200';
+      case "A+":
+        return "bg-green-100 text-green-800 border-green-200";
+      case "A":
+        return "bg-blue-100 text-blue-800 border-blue-200";
+      case "B+":
+        return "bg-yellow-100 text-yellow-800 border-yellow-200";
+      case "B":
+        return "bg-orange-100 text-orange-800 border-orange-200";
+      default:
+        return "bg-gray-100 text-gray-800 border-gray-200";
     }
   };
+
+  const [farmer, setFarmer] = useState(null);
+
+  useEffect(() => {
+    const pathname = window.location.pathname;
+    const farmerId = pathname.substring(pathname.lastIndexOf("/") + 1);
+    const farm = farmers.find((farmer) => farmer.id == farmerId);
+    setFarmer(farm);
+  });
 
   return (
     <div className="min-h-screen bg-background pt-20 pb-8">
       <div className="max-w-7xl mx-auto px-4">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">Agricultural Marketplace</h1>
+          <h1 className="text-3xl font-bold mb-2">{farmer?.name}</h1>
           <p className="text-muted-foreground">
-            Discover quality products from verified farmers across South Africa
+            Discover quality products from {farmer?.name}
           </p>
         </div>
 
@@ -190,7 +218,7 @@ const Marketplace = () => {
                   />
                 </div>
               </div>
-              
+
               <Select value={categoryFilter} onValueChange={setCategoryFilter}>
                 <SelectTrigger>
                   <SelectValue placeholder="Category" />
@@ -237,17 +265,21 @@ const Marketplace = () => {
         {/* Results Count */}
         <div className="mb-6">
           <p className="text-muted-foreground">
-            Showing {filteredProducts.length} product{filteredProducts.length !== 1 ? 's' : ''}
+            Showing {filteredProducts.length} product
+            {filteredProducts.length !== 1 ? "s" : ""}
           </p>
         </div>
 
         {/* Products Grid */}
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {filteredProducts.map((product) => (
-            <Card key={product.id} className="agri-card hover:shadow-glow transition-all duration-300 overflow-hidden">
+            <Card
+              key={product.id}
+              className="agri-card hover:shadow-glow transition-all duration-300 overflow-hidden"
+            >
               <div className="aspect-video relative overflow-hidden">
-                <img 
-                  src={product.image} 
+                <img
+                  src={product.image}
                   alt={product.name}
                   className="w-full h-full object-cover"
                 />
@@ -264,7 +296,9 @@ const Marketplace = () => {
                 <div className="flex justify-between items-start">
                   <div>
                     <CardTitle className="text-lg">{product.name}</CardTitle>
-                    <p className="text-sm text-muted-foreground">by {product.farmer}</p>
+                    <p className="text-sm text-muted-foreground">
+                      by {product.farmer}
+                    </p>
                   </div>
                   {product.verified && (
                     <Badge className="bg-green-100 text-green-800 border-green-200">
@@ -274,7 +308,7 @@ const Marketplace = () => {
                   )}
                 </div>
               </CardHeader>
-              
+
               <CardContent className="space-y-4">
                 <div className="flex items-center justify-between">
                   <Badge className={getQualityColor(product.qualityGrade)}>
@@ -282,11 +316,15 @@ const Marketplace = () => {
                   </Badge>
                   <div className="flex items-center space-x-1">
                     <Star className="h-4 w-4 text-yellow-500 fill-current" />
-                    <span className="text-sm font-medium">{product.rating}</span>
+                    <span className="text-sm font-medium">
+                      {product.rating}
+                    </span>
                   </div>
                 </div>
 
-                <p className="text-sm text-muted-foreground">{product.description}</p>
+                <p className="text-sm text-muted-foreground">
+                  {product.description}
+                </p>
 
                 <div className="flex items-center space-x-4 text-sm text-muted-foreground">
                   <div className="flex items-center space-x-1">
@@ -304,19 +342,14 @@ const Marketplace = () => {
                     <div>
                       <p className="text-2xl font-bold text-primary">
                         R{product.price}
-                        <span className="text-sm font-normal text-muted-foreground">/{product.unit}</span>
+                        <span className="text-sm font-normal text-muted-foreground">
+                          /{product.unit}
+                        </span>
                       </p>
-                      <p className="text-sm text-muted-foreground">{product.quantity}</p>
+                      <p className="text-sm text-muted-foreground">
+                        {product.quantity}
+                      </p>
                     </div>
-                  </div>
-                  
-                  <div className="flex space-x-2">
-                    <Button className="flex-1 agri-button">
-                      Contact Farmer
-                    </Button>
-                    <Button variant="outline" size="icon">
-                      <Truck className="h-4 w-4" />
-                    </Button>
                   </div>
                 </div>
               </CardContent>
@@ -338,4 +371,4 @@ const Marketplace = () => {
   );
 };
 
-export default Marketplace;
+export default MarketplaceSupplier;

@@ -1,11 +1,16 @@
-import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
-import { ThemeToggle } from '@/components/Layout/ThemeToggle';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { Sprout, Menu, X, User, ChevronDown } from 'lucide-react';
-import { useState } from 'react';
-import { useUser } from '@/contexts/UserContext';
+import React from "react";
+import { Link, useLocation } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/Layout/ThemeToggle";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Sprout, Menu, X, User, ChevronDown } from "lucide-react";
+import { useState } from "react";
+import { useUser } from "@/contexts/UserContext";
 
 const Navbar = () => {
   const location = useLocation();
@@ -13,16 +18,17 @@ const Navbar = () => {
   const { user, logout } = useUser();
 
   const navItems = [
-    { name: 'Home', path: '/' },
-    { name: 'Marketplace', path: '/marketplace' },
-    { name: 'Weather', path: '/weather' },
-    { name: 'Channels', path: '/channels' },
+    { name: "Home", path: "/" },
+    { name: "Marketplace", path: "/marketplace" },
+    { name: "Farmers Map", path: "/map" },
+    { name: "Weather", path: "/weather" },
+    { name: "Channels", path: "/channels" },
   ];
 
   const dashboardItems = [
-    { name: 'Admin Dashboard', path: '/admin', role: 'admin' },
-    { name: 'Farmer Dashboard', path: '/farmer', role: 'farmer' },
-    { name: 'Buyer Dashboard', path: '/buyer', role: 'buyer' },
+    { name: "Admin Dashboard", path: "/admin", role: "admin" },
+    { name: "Farmer Dashboard", path: "/farmer", role: "farmer" },
+    { name: "Buyer Dashboard", path: "/buyer", role: "buyer" },
   ];
 
   const isActive = (path: string) => location.pathname === path;
@@ -38,7 +44,7 @@ const Navbar = () => {
                 <Sprout className="h-6 w-6 text-primary-foreground" />
               </div>
               <span className="text-xl font-bold bg-gradient-primary bg-clip-text text-transparent">
-                AgriAI Connect
+                AgroConnect
               </span>
             </Link>
           </div>
@@ -51,21 +57,24 @@ const Navbar = () => {
                 to={item.path}
                 className={`px-3 py-2 rounded-md text-sm font-medium transition-all duration-200 ${
                   isActive(item.path)
-                    ? 'text-primary bg-primary/10'
-                    : 'text-muted-foreground hover:text-primary hover:bg-primary/5'
+                    ? "text-primary bg-primary/10"
+                    : "text-muted-foreground hover:text-primary hover:bg-primary/5"
                 }`}
               >
                 {item.name}
               </Link>
             ))}
-            
+
             <div className="flex items-center space-x-4">
               <ThemeToggle />
-              
+
               {user ? (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" className="flex items-center space-x-2">
+                    <Button
+                      variant="ghost"
+                      className="flex items-center space-x-2"
+                    >
                       <User className="h-4 w-4" />
                       <span>{user.name}</span>
                       <ChevronDown className="h-4 w-4" />
@@ -97,7 +106,11 @@ const Navbar = () => {
               onClick={() => setIsOpen(!isOpen)}
               className="p-2 rounded-md text-muted-foreground hover:text-primary hover:bg-primary/5 transition-colors"
             >
-              {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+              {isOpen ? (
+                <X className="h-6 w-6" />
+              ) : (
+                <Menu className="h-6 w-6" />
+              )}
             </button>
           </div>
         </div>
@@ -112,8 +125,8 @@ const Navbar = () => {
                   to={item.path}
                   className={`block px-3 py-2 rounded-md text-base font-medium transition-all duration-200 ${
                     isActive(item.path)
-                      ? 'text-primary bg-primary/10'
-                      : 'text-muted-foreground hover:text-primary hover:bg-primary/5'
+                      ? "text-primary bg-primary/10"
+                      : "text-muted-foreground hover:text-primary hover:bg-primary/5"
                   }`}
                   onClick={() => setIsOpen(false)}
                 >
@@ -149,7 +162,9 @@ const Navbar = () => {
                   </div>
                 ) : (
                   <Button asChild className="agri-button w-full">
-                    <Link to="/auth" onClick={() => setIsOpen(false)}>Sign In</Link>
+                    <Link to="/auth" onClick={() => setIsOpen(false)}>
+                      Sign In
+                    </Link>
                   </Button>
                 )}
               </div>

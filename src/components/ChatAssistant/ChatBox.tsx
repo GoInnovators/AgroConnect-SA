@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { MessageCircle, Send, X, Bot, User } from 'lucide-react';
+import React, { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { MessageCircle, Send, X, Bot, User } from "lucide-react";
 
 interface Message {
   id: string;
   content: string;
-  sender: 'user' | 'bot';
+  sender: "user" | "bot";
   timestamp: Date;
 }
 
@@ -16,65 +16,64 @@ const ChatBox = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     {
-      id: '1',
-      content: 'Hello! I\'m your AgriAI assistant. How can I help you today?',
-      sender: 'bot',
-      timestamp: new Date()
-    }
+      id: "1",
+      content: "Hello! I'm your AgriAI assistant. How can I help you today?",
+      sender: "bot",
+      timestamp: new Date(),
+    },
   ]);
-  const [inputValue, setInputValue] = useState('');
+  const [inputValue, setInputValue] = useState("");
   const [isTyping, setIsTyping] = useState(false);
 
   const handleSendMessage = async () => {
-  if (!inputValue.trim()) return;
+    if (!inputValue.trim()) return;
 
-  const userMessage: Message = {
-    id: Date.now().toString(),
-    content: inputValue,
-    sender: 'user',
-    timestamp: new Date()
+    const userMessage: Message = {
+      id: Date.now().toString(),
+      content: inputValue,
+      sender: "user",
+      timestamp: new Date(),
+    };
+
+    setMessages((prev) => [...prev, userMessage]);
+    setInputValue("");
+    setIsTyping(true);
+
+    try {
+      const res = await fetch("https://agroapi.netlify.app/v1/ai/chat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ message: inputValue }),
+      });
+
+      const data = await res.json();
+
+      const botMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        content: data.response || "Sorry, I did not understand that.",
+        sender: "bot",
+        timestamp: new Date(),
+      };
+
+      setMessages((prev) => [...prev, botMessage]);
+    } catch (error) {
+      console.error("Chat API Error:", error);
+      const botMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        content: "Something went wrong. Please try again later.",
+        sender: "bot",
+        timestamp: new Date(),
+      };
+      setMessages((prev) => [...prev, botMessage]);
+    } finally {
+      setIsTyping(false);
+    }
   };
 
-  setMessages(prev => [...prev, userMessage]);
-  setInputValue('');
-  setIsTyping(true);
-
-  try {
-    const res = await fetch('https://agroapi.netlify.app/v1/ai/chat', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ message: inputValue })
-    });
-
-    const data = await res.json();
-
-    const botMessage: Message = {
-      id: (Date.now() + 1).toString(),
-      content: data.response || 'Sorry, I did not understand that.',
-      sender: 'bot',
-      timestamp: new Date()
-    };
-
-    setMessages(prev => [...prev, botMessage]);
-  } catch (error) {
-    console.error('Chat API Error:', error);
-    const botMessage: Message = {
-      id: (Date.now() + 1).toString(),
-      content: 'Something went wrong. Please try again later.',
-      sender: 'bot',
-      timestamp: new Date()
-    };
-    setMessages(prev => [...prev, botMessage]);
-  } finally {
-    setIsTyping(false);
-  }
-};
-
-
   const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
+    if (e.key === "Enter") {
       handleSendMessage();
     }
   };
@@ -87,7 +86,11 @@ const ChatBox = () => {
           onClick={() => setIsOpen(!isOpen)}
           className="rounded-full w-14 h-14 shadow-lg hover:shadow-xl transition-all duration-300 agri-button"
         >
-          {isOpen ? <X className="h-6 w-6" /> : <MessageCircle className="h-6 w-6" />}
+          {isOpen ? (
+            <X className="h-6 w-6" />
+          ) : (
+            <MessageCircle className="h-6 w-6" />
+          )}
         </Button>
       </div>
 
@@ -108,24 +111,26 @@ const ChatBox = () => {
                     <div
                       key={message.id}
                       className={`flex items-start space-x-2 ${
-                        message.sender === 'user' ? 'justify-end' : 'justify-start'
+                        message.sender === "user"
+                          ? "justify-end"
+                          : "justify-start"
                       }`}
                     >
-                      {message.sender === 'bot' && (
+                      {message.sender === "bot" && (
                         <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center mt-1">
                           <Bot className="h-4 w-4 text-primary" />
                         </div>
                       )}
                       <div
                         className={`max-w-[80%] p-3 rounded-lg ${
-                          message.sender === 'user'
-                            ? 'bg-primary text-primary-foreground'
-                            : 'bg-muted text-muted-foreground'
+                          message.sender === "user"
+                            ? "bg-primary text-primary-foreground"
+                            : "bg-muted text-muted-foreground"
                         }`}
                       >
                         <p className="text-sm">{message.content}</p>
                       </div>
-                      {message.sender === 'user' && (
+                      {message.sender === "user" && (
                         <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center mt-1">
                           <User className="h-4 w-4 text-primary-foreground" />
                         </div>
@@ -157,7 +162,11 @@ const ChatBox = () => {
                     onKeyPress={handleKeyPress}
                     className="flex-1"
                   />
-                  <Button onClick={handleSendMessage} size="icon" className="agri-button">
+                  <Button
+                    onClick={handleSendMessage}
+                    size="icon"
+                    className="agri-button"
+                  >
                     <Send className="h-4 w-4" />
                   </Button>
                 </div>

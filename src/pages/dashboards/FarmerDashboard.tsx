@@ -1,86 +1,147 @@
-import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { 
-  Sprout, 
-  TrendingUp, 
-  DollarSign, 
+import React, { useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Sprout,
+  TrendingUp,
+  DollarSign,
   Package,
   Plus,
   Download,
   Upload,
   Calendar,
   MapPin,
-  FileText
-} from 'lucide-react';
-import { LineChart, Line, AreaChart, Area, BarChart, Bar, ResponsiveContainer, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
+  FileText,
+} from "lucide-react";
+import {
+  LineChart,
+  Line,
+  AreaChart,
+  Area,
+  BarChart,
+  Bar,
+  ResponsiveContainer,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+} from "recharts";
 
 const FarmerDashboard = () => {
   const [showAddRecord, setShowAddRecord] = useState(false);
   const [newRecord, setNewRecord] = useState({
-    type: 'yield',
-    crop: '',
-    quantity: '',
-    date: '',
-    notes: ''
+    type: "yield",
+    crop: "",
+    quantity: "",
+    date: "",
+    notes: "",
   });
 
   // Mock data for farmer metrics
   const farmerStats = [
-    { title: 'Total Revenue', value: 'R125,430', change: '+18%', icon: DollarSign },
-    { title: 'Active Listings', value: '12', change: '+3', icon: Package },
-    { title: 'Crop Yield', value: '2.8 tons', change: '+12%', icon: Sprout },
-    { title: 'Market Rating', value: '4.8/5', change: '+0.2', icon: TrendingUp }
+    {
+      title: "Total Revenue",
+      value: "R125,430",
+      change: "+18%",
+      icon: DollarSign,
+    },
+    { title: "Active Listings", value: "12", change: "+3", icon: Package },
+    { title: "Crop Yield", value: "2.8 tons", change: "+12%", icon: Sprout },
+    {
+      title: "Market Rating",
+      value: "4.8/5",
+      change: "+0.2",
+      icon: TrendingUp,
+    },
   ];
 
   const yieldData = [
-    { month: 'Jan', tomatoes: 450, maize: 1200, potatoes: 800 },
-    { month: 'Feb', tomatoes: 520, maize: 1100, potatoes: 750 },
-    { month: 'Mar', tomatoes: 480, maize: 1350, potatoes: 900 },
-    { month: 'Apr', tomatoes: 600, maize: 1250, potatoes: 850 },
-    { month: 'May', tomatoes: 580, maize: 1400, potatoes: 920 },
-    { month: 'Jun', tomatoes: 650, maize: 1300, potatoes: 980 }
+    { month: "Jan", tomatoes: 450, maize: 1200, potatoes: 800 },
+    { month: "Feb", tomatoes: 520, maize: 1100, potatoes: 750 },
+    { month: "Mar", tomatoes: 480, maize: 1350, potatoes: 900 },
+    { month: "Apr", tomatoes: 600, maize: 1250, potatoes: 850 },
+    { month: "May", tomatoes: 580, maize: 1400, potatoes: 920 },
+    { month: "Jun", tomatoes: 650, maize: 1300, potatoes: 980 },
   ];
 
   const expenseData = [
-    { category: 'Seeds', amount: 15000 },
-    { category: 'Fertilizer', amount: 22000 },
-    { category: 'Labor', amount: 35000 },
-    { category: 'Equipment', amount: 18000 },
-    { category: 'Fuel', amount: 12000 }
+    { category: "Seeds", amount: 15000 },
+    { category: "Fertilizer", amount: 22000 },
+    { category: "Labor", amount: 35000 },
+    { category: "Equipment", amount: 18000 },
+    { category: "Fuel", amount: 12000 },
   ];
 
   const recentRecords = [
-    { id: 1, type: 'yield', crop: 'Tomatoes', quantity: '150kg', date: '2024-01-15', notes: 'Good harvest quality' },
-    { id: 2, type: 'expense', crop: 'General', quantity: 'R2,500', date: '2024-01-14', notes: 'Fertilizer purchase' },
-    { id: 3, type: 'livestock', crop: 'Chickens', quantity: '50 birds', date: '2024-01-12', notes: 'Monthly count' },
-    { id: 4, type: 'yield', crop: 'Maize', quantity: '500kg', date: '2024-01-10', notes: 'Early harvest test' }
+    {
+      id: 1,
+      type: "yield",
+      crop: "Tomatoes",
+      quantity: "150kg",
+      date: "2024-01-15",
+      notes: "Good harvest quality",
+    },
+    {
+      id: 2,
+      type: "expense",
+      crop: "General",
+      quantity: "R2,500",
+      date: "2024-01-14",
+      notes: "Fertilizer purchase",
+    },
+    {
+      id: 3,
+      type: "livestock",
+      crop: "Chickens",
+      quantity: "50 birds",
+      date: "2024-01-12",
+      notes: "Monthly count",
+    },
+    {
+      id: 4,
+      type: "yield",
+      crop: "Maize",
+      quantity: "500kg",
+      date: "2024-01-10",
+      notes: "Early harvest test",
+    },
   ];
 
   const handleAddRecord = () => {
     // Add logic to save the record
-    console.log('Adding record:', newRecord);
-    setNewRecord({ type: 'yield', crop: '', quantity: '', date: '', notes: '' });
+    console.log("Adding record:", newRecord);
+    setNewRecord({
+      type: "yield",
+      crop: "",
+      quantity: "",
+      date: "",
+      notes: "",
+    });
     setShowAddRecord(false);
   };
 
   const handleExportCSV = () => {
     // TODO: Implement CSV export functionality
-    console.log('Exporting farmer records to CSV...');
+    console.log("Exporting farmer records to CSV...");
     // This would generate and download a CSV file with all farmer records
   };
 
   const getRecordTypeColor = (type: string) => {
     switch (type) {
-      case 'yield': return 'bg-green-100 text-green-800';
-      case 'expense': return 'bg-red-100 text-red-800';
-      case 'livestock': return 'bg-blue-100 text-blue-800';
-      default: return 'bg-gray-100 text-gray-800';
+      case "yield":
+        return "bg-green-100 text-green-800";
+      case "expense":
+        return "bg-red-100 text-red-800";
+      case "livestock":
+        return "bg-blue-100 text-blue-800";
+      default:
+        return "bg-gray-100 text-gray-800";
     }
   };
 
@@ -90,7 +151,9 @@ const FarmerDashboard = () => {
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold mb-2">Farmer Dashboard</h1>
-          <p className="text-muted-foreground">Track your farming operations and market performance</p>
+          <p className="text-muted-foreground">
+            Track your farming operations and market performance
+          </p>
         </div>
 
         {/* Stats Cards */}
@@ -100,9 +163,13 @@ const FarmerDashboard = () => {
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-muted-foreground">{stat.title}</p>
+                    <p className="text-sm font-medium text-muted-foreground">
+                      {stat.title}
+                    </p>
                     <p className="text-2xl font-bold">{stat.value}</p>
-                    <p className="text-sm text-green-600">{stat.change} this month</p>
+                    <p className="text-sm text-green-600">
+                      {stat.change} this month
+                    </p>
                   </div>
                   <stat.icon className="h-8 w-8 text-primary" />
                 </div>
@@ -134,9 +201,24 @@ const FarmerDashboard = () => {
                       <YAxis />
                       <Tooltip />
                       <Legend />
-                      <Line type="monotone" dataKey="tomatoes" stroke="#ef4444" strokeWidth={2} />
-                      <Line type="monotone" dataKey="maize" stroke="#f59e0b" strokeWidth={2} />
-                      <Line type="monotone" dataKey="potatoes" stroke="#8b5cf6" strokeWidth={2} />
+                      <Line
+                        type="monotone"
+                        dataKey="tomatoes"
+                        stroke="#ef4444"
+                        strokeWidth={2}
+                      />
+                      <Line
+                        type="monotone"
+                        dataKey="maize"
+                        stroke="#f59e0b"
+                        strokeWidth={2}
+                      />
+                      <Line
+                        type="monotone"
+                        dataKey="potatoes"
+                        stroke="#8b5cf6"
+                        strokeWidth={2}
+                      />
                     </LineChart>
                   </ResponsiveContainer>
                 </CardContent>
@@ -172,7 +254,10 @@ const FarmerDashboard = () => {
                       <Download className="h-4 w-4 mr-2" />
                       Export CSV
                     </Button>
-                    <Button onClick={() => setShowAddRecord(true)} className="agri-button">
+                    <Button
+                      onClick={() => setShowAddRecord(true)}
+                      className="agri-button"
+                    >
                       <Plus className="h-4 w-4 mr-2" />
                       Add Record
                     </Button>
@@ -192,13 +277,20 @@ const FarmerDashboard = () => {
                           <select
                             id="type"
                             value={newRecord.type}
-                            onChange={(e) => setNewRecord({...newRecord, type: e.target.value})}
+                            onChange={(e) =>
+                              setNewRecord({
+                                ...newRecord,
+                                type: e.target.value,
+                              })
+                            }
                             className="w-full p-2 border rounded-md"
                           >
                             <option value="yield">Crop Yield</option>
                             <option value="expense">Expense</option>
                             <option value="livestock">Livestock</option>
-                            <option value="maintenance">Equipment Maintenance</option>
+                            <option value="maintenance">
+                              Equipment Maintenance
+                            </option>
                           </select>
                         </div>
                         <div>
@@ -206,7 +298,12 @@ const FarmerDashboard = () => {
                           <Input
                             id="crop"
                             value={newRecord.crop}
-                            onChange={(e) => setNewRecord({...newRecord, crop: e.target.value})}
+                            onChange={(e) =>
+                              setNewRecord({
+                                ...newRecord,
+                                crop: e.target.value,
+                              })
+                            }
                             placeholder="e.g., Tomatoes, General"
                           />
                         </div>
@@ -215,7 +312,12 @@ const FarmerDashboard = () => {
                           <Input
                             id="quantity"
                             value={newRecord.quantity}
-                            onChange={(e) => setNewRecord({...newRecord, quantity: e.target.value})}
+                            onChange={(e) =>
+                              setNewRecord({
+                                ...newRecord,
+                                quantity: e.target.value,
+                              })
+                            }
                             placeholder="e.g., 150kg, R2,500"
                           />
                         </div>
@@ -225,7 +327,12 @@ const FarmerDashboard = () => {
                             id="date"
                             type="date"
                             value={newRecord.date}
-                            onChange={(e) => setNewRecord({...newRecord, date: e.target.value})}
+                            onChange={(e) =>
+                              setNewRecord({
+                                ...newRecord,
+                                date: e.target.value,
+                              })
+                            }
                           />
                         </div>
                       </div>
@@ -234,15 +341,26 @@ const FarmerDashboard = () => {
                         <Textarea
                           id="notes"
                           value={newRecord.notes}
-                          onChange={(e) => setNewRecord({...newRecord, notes: e.target.value})}
+                          onChange={(e) =>
+                            setNewRecord({
+                              ...newRecord,
+                              notes: e.target.value,
+                            })
+                          }
                           placeholder="Additional notes about this record..."
                         />
                       </div>
                       <div className="flex space-x-2">
-                        <Button onClick={handleAddRecord} className="agri-button">
+                        <Button
+                          onClick={handleAddRecord}
+                          className="agri-button"
+                        >
                           Save Record
                         </Button>
-                        <Button variant="outline" onClick={() => setShowAddRecord(false)}>
+                        <Button
+                          variant="outline"
+                          onClick={() => setShowAddRecord(false)}
+                        >
                           Cancel
                         </Button>
                       </div>
@@ -252,19 +370,26 @@ const FarmerDashboard = () => {
 
                 <div className="space-y-4">
                   {recentRecords.map((record) => (
-                    <div key={record.id} className="flex items-center justify-between p-4 border rounded-lg">
+                    <div
+                      key={record.id}
+                      className="flex items-center justify-between p-4 border rounded-lg"
+                    >
                       <div className="flex items-center space-x-4">
                         <Badge className={getRecordTypeColor(record.type)}>
                           {record.type}
                         </Badge>
                         <div>
                           <p className="font-medium">{record.crop}</p>
-                          <p className="text-sm text-muted-foreground">{record.notes}</p>
+                          <p className="text-sm text-muted-foreground">
+                            {record.notes}
+                          </p>
                         </div>
                       </div>
                       <div className="text-right">
                         <p className="font-semibold">{record.quantity}</p>
-                        <p className="text-sm text-muted-foreground">{record.date}</p>
+                        <p className="text-sm text-muted-foreground">
+                          {record.date}
+                        </p>
                       </div>
                     </div>
                   ))}
@@ -286,7 +411,14 @@ const FarmerDashboard = () => {
                       <XAxis dataKey="month" />
                       <YAxis />
                       <Tooltip />
-                      <Area type="monotone" dataKey="tomatoes" stackId="1" stroke="hsl(var(--primary))" fill="hsl(var(--primary))" fillOpacity={0.3} />
+                      <Area
+                        type="monotone"
+                        dataKey="tomatoes"
+                        stackId="1"
+                        stroke="hsl(var(--primary))"
+                        fill="hsl(var(--primary))"
+                        fillOpacity={0.3}
+                      />
                     </AreaChart>
                   </ResponsiveContainer>
                 </CardContent>
@@ -299,7 +431,9 @@ const FarmerDashboard = () => {
                 <CardContent className="space-y-4">
                   <div className="flex justify-between items-center">
                     <span>Best Performing Crop</span>
-                    <Badge className="bg-green-100 text-green-800">Tomatoes</Badge>
+                    <Badge className="bg-green-100 text-green-800">
+                      Tomatoes
+                    </Badge>
                   </div>
                   <div className="flex justify-between items-center">
                     <span>Highest Revenue Month</span>
@@ -326,18 +460,46 @@ const FarmerDashboard = () => {
               <CardContent>
                 <div className="grid gap-4">
                   {[
-                    { product: 'Organic Tomatoes', price: 'R15.50/kg', quantity: '500kg', status: 'active' },
-                    { product: 'Fresh Eggs', price: 'R2.80/dozen', quantity: '200 dozen', status: 'active' },
-                    { product: 'Sweet Potatoes', price: 'R12.00/kg', quantity: '300kg', status: 'pending' }
+                    {
+                      product: "Organic Tomatoes",
+                      price: "R15.50/kg",
+                      quantity: "500kg",
+                      status: "active",
+                    },
+                    {
+                      product: "Fresh Eggs",
+                      price: "R2.80/dozen",
+                      quantity: "200 dozen",
+                      status: "active",
+                    },
+                    {
+                      product: "Sweet Potatoes",
+                      price: "R12.00/kg",
+                      quantity: "300kg",
+                      status: "pending",
+                    },
                   ].map((listing, index) => (
-                    <div key={index} className="flex items-center justify-between p-4 border rounded-lg">
+                    <div
+                      key={index}
+                      className="flex items-center justify-between p-4 border rounded-lg"
+                    >
                       <div>
                         <p className="font-medium">{listing.product}</p>
-                        <p className="text-sm text-muted-foreground">{listing.quantity} available</p>
+                        <p className="text-sm text-muted-foreground">
+                          {listing.quantity} available
+                        </p>
                       </div>
                       <div className="text-right">
-                        <p className="font-semibold text-primary">{listing.price}</p>
-                        <Badge className={listing.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}>
+                        <p className="font-semibold text-primary">
+                          {listing.price}
+                        </p>
+                        <Badge
+                          className={
+                            listing.status === "active"
+                              ? "bg-green-100 text-green-800"
+                              : "bg-yellow-100 text-yellow-800"
+                          }
+                        >
                           {listing.status}
                         </Badge>
                       </div>

@@ -1,50 +1,56 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { 
-  Sprout, 
-  TrendingUp, 
-  Shield, 
-  Truck, 
+import React from "react";
+import { Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Sprout,
+  TrendingUp,
+  Shield,
+  Truck,
   Brain,
   Users,
   MapPin,
-  Clock
-} from 'lucide-react';
+  Clock,
+} from "lucide-react";
 
 const Home = () => {
   const features = [
     {
       icon: Brain,
-      title: 'AI-Powered Insights',
-      description: 'Advanced demand forecasting and quality grading using computer vision and machine learning'
+      title: "AI-Powered Insights",
+      description:
+        "Advanced demand forecasting and quality grading using computer vision and machine learning",
     },
     {
       icon: TrendingUp,
-      title: 'Dynamic Pricing',
-      description: 'Real-time market pricing based on supply, demand, and quality metrics'
+      title: "Dynamic Pricing",
+      description:
+        "Real-time market pricing based on supply, demand, and quality metrics",
     },
     {
       icon: Shield,
-      title: 'Finance & Insurance',
-      description: 'Access to credit and insurance products tailored for smallholder farmers'
+      title: "Finance & Insurance",
+      description:
+        "Access to credit and insurance products tailored for smallholder farmers",
     },
     {
       icon: Truck,
-      title: 'Route Optimization',
-      description: 'Efficient logistics and cold-chain solutions to reduce costs and improve freshness'
+      title: "Route Optimization",
+      description:
+        "Efficient logistics and cold-chain solutions to reduce costs and improve freshness",
     },
     {
       icon: Users,
-      title: 'Marketplace Connect',
-      description: 'Direct connection between farmers and verified buyers with secure transactions'
+      title: "Marketplace Connect",
+      description:
+        "Direct connection between farmers and verified buyers with secure transactions",
     },
     {
       icon: MapPin,
-      title: 'Offline Access',
-      description: 'USSD/IVR support for areas with limited internet connectivity'
-    }
+      title: "Offline Access",
+      description:
+        "USSD/IVR support for areas with limited internet connectivity",
+    },
   ];
 
   return (
@@ -58,19 +64,13 @@ const Home = () => {
               Empowering Smallholder Farmers with AI
             </h1>
             <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-3xl mx-auto">
-              AgriAI Connect bridges the gap between farmers and markets through intelligent forecasting, 
-              quality grading, and optimized logistics solutions
+              AgriAI Connect bridges the gap between farmers and markets through
+              intelligent forecasting, quality grading, and optimized logistics
+              solutions
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button asChild className="agri-button text-lg px-8 py-4">
                 <Link to="/auth">Get Started Today</Link>
-              </Button>
-              <Button 
-                variant="outline" 
-                asChild 
-                className="border-primary text-primary hover:bg-primary/10 text-lg px-8 py-4"
-              >
-                <Link to="/dashboard">View Demo</Link>
               </Button>
             </div>
           </div>
@@ -93,15 +93,15 @@ const Home = () => {
               Comprehensive Agricultural Solutions
             </h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              From demand forecasting to route optimization, we provide end-to-end solutions 
-              for modern agricultural challenges
+              From demand forecasting to route optimization, we provide
+              end-to-end solutions for modern agricultural challenges
             </p>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {features.map((feature, index) => (
-              <Card 
-                key={index} 
+              <Card
+                key={index}
                 className="agri-card hover:shadow-glow transition-all duration-300 transform hover:-translate-y-2 animate-grow"
                 style={{ animationDelay: `${index * 100}ms` }}
               >
@@ -125,15 +125,21 @@ const Home = () => {
       {/* Stats Section */}
       <section className="py-16 px-4 bg-gradient-earth">
         <div className="max-w-7xl mx-auto text-center text-white">
-          <h2 className="text-3xl font-bold mb-12">Transforming South African Agriculture</h2>
+          <h2 className="text-3xl font-bold mb-12">
+            Transforming South African Agriculture
+          </h2>
           <div className="grid md:grid-cols-4 gap-8">
             {[
-              { number: '10,000+', label: 'Farmers Connected' },
-              { number: '500+', label: 'Verified Buyers' },
-              { number: '95%', label: 'Price Improvement' },
-              { number: '24/7', label: 'Support Available' }
+              { number: "10,000+", label: "Farmers Connected" },
+              { number: "500+", label: "Verified Buyers" },
+              { number: "95%", label: "Price Improvement" },
+              { number: "24/7", label: "Support Available" },
             ].map((stat, index) => (
-              <div key={index} className="animate-grow" style={{ animationDelay: `${index * 150}ms` }}>
+              <div
+                key={index}
+                className="animate-grow"
+                style={{ animationDelay: `${index * 150}ms` }}
+              >
                 <div className="text-4xl font-bold mb-2">{stat.number}</div>
                 <div className="text-lg opacity-90">{stat.label}</div>
               </div>
@@ -146,9 +152,12 @@ const Home = () => {
       <section className="py-16 px-4">
         <div className="max-w-4xl mx-auto text-center">
           <div className="agri-card p-8 animate-fade-in">
-            <h2 className="text-3xl font-bold mb-4">Ready to Transform Your Farm?</h2>
+            <h2 className="text-3xl font-bold mb-4">
+              Ready to Transform Your Farm?
+            </h2>
             <p className="text-xl text-muted-foreground mb-6">
-              Join thousands of farmers already benefiting from AI-powered agricultural solutions
+              Join thousands of farmers already benefiting from AI-powered
+              agricultural solutions
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button asChild className="agri-button">
