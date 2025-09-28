@@ -158,11 +158,6 @@ const MarketplaceCategory = () => {
                     <Star className="h-4 w-4 text-yellow-500 fill-current" />
                     <span className="text-sm font-medium">{farmer.rating}</span>
                   </div>
-                  {farmer?.distance && (
-                    <span className="text-sm text-muted-foreground">
-                      {farmer?.distance.toFixed(2)} km away
-                    </span>
-                  )}
                 </div>
 
                 <p className="text-sm text-muted-foreground">

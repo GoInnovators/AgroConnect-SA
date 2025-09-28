@@ -20,39 +20,45 @@ import MarketplaceSupplier from "@/pages/marketplace/MarketplaceSupplier";
 import FarmersMap from "./pages/FarmersMap";
 import { useEffect } from "react";
 import { getLocation } from "./lib/utils";
+import { AppModelProvider } from "./contexts/AppModelContext";
 
 const queryClient = new QueryClient();
 
 const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <div className="min-h-screen bg-background text-foreground">
-            <Navbar />
-            <ChatBox />
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/auth" element={<Auth />} />
-              <Route path="/admin" element={<AdminDashboard />} />
-              <Route path="/dashboard" element={<FarmerDashboard />} />
-              <Route path="/buyer" element={<BuyerDashboard />} />
-              <Route path="/map" element={<FarmersMap />} />
-              <Route path="/marketplace" element={<Marketplace />} />
-              <Route path="/marketplace/*" element={<MarketplaceCategory />} />
-              <Route
-                path="/marketplace/supplier/*"
-                element={<MarketplaceSupplier />}
-              />
-              <Route path="/weather" element={<Weather />} />
-              <Route path="/channels" element={<Channels />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </div>
-        </BrowserRouter>
-      </TooltipProvider>
+      <AppModelProvider>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <div className="min-h-screen bg-background text-foreground">
+              <Navbar />
+              <ChatBox />
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/auth" element={<Auth />} />
+                <Route path="/admin" element={<AdminDashboard />} />
+                <Route path="/dashboard" element={<FarmerDashboard />} />
+                <Route path="/buyer" element={<BuyerDashboard />} />
+                <Route path="/map" element={<FarmersMap />} />
+                <Route path="/marketplace" element={<Marketplace />} />
+                <Route
+                  path="/marketplace/*"
+                  element={<MarketplaceCategory />}
+                />
+                <Route
+                  path="/marketplace/supplier/*"
+                  element={<MarketplaceSupplier />}
+                />
+                <Route path="/weather" element={<Weather />} />
+                <Route path="/channels" element={<Channels />} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </div>
+          </BrowserRouter>
+        </TooltipProvider>
+      </AppModelProvider>
     </QueryClientProvider>
   );
 };

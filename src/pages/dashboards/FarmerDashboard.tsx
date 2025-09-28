@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import Grading from "@/components/Grading";
 import {
   Sprout,
   TrendingUp,
@@ -36,7 +37,10 @@ import { getLocation } from "@/lib/utils";
 import Weather from "../Weather";
 
 const FarmerDashboard = () => {
-  const [dashboardData, setDashboardData] = useState({ soil: "" });
+  const [dashboardData, setDashboardData] = useState({
+    soil: "",
+    weatherData: {},
+  });
   const [showAddRecord, setShowAddRecord] = useState(false);
   const [newRecord, setNewRecord] = useState({
     type: "yield",
@@ -136,6 +140,8 @@ const FarmerDashboard = () => {
         ...prev,
         soil: json.properties?.most_probable_soil_type || "Unknown",
       }));
+
+      //call the ai to give insights
     } catch (err) {
       console.error("Error fetching soil type:", err);
     }
@@ -150,6 +156,12 @@ const FarmerDashboard = () => {
     (async () => {
       const { lat, lon } = await getLocation();
       await getSoilType({ lat, lon });
+      setDashboardData((prev) => {
+        return {
+          ...prev,
+          weatherData: JSON.stringify(localStorage.getItem("_weather")) || {},
+        };
+      });
     })();
   }, []);
   const handleAddRecord = () => {
@@ -193,7 +205,6 @@ const FarmerDashboard = () => {
             Track your farming operations and market performance
           </p>
         </div>
-
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           {farmerStats.map((stat, index) => (

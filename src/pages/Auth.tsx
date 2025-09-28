@@ -36,24 +36,15 @@ const Auth = () => {
   const handleSubmit = async (e: React.FormEvent, isLogin: boolean = true) => {
     e.preventDefault();
     setIsLoading(true);
-
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-
-    // Create mock user based on role
-    const mockUser = {
-      id: "1",
-      name: isLogin ? "John Doe" : "New User",
-      email: "user@example.com",
-      role: selectedRole as UserRole,
-    };
-
-    setUser(mockUser);
+    const { data, error } = await supabase.auth.signUp({
+      email: formData.email,
+      password: formData.password,
+    });
+    setUser(data);
 
     // Redirect to appropriate dashboard
     const roleRoutes = {
-      admin: "/admin",
-      farmer: "/farmer",
+      farmer: "/dashboard",
       buyer: "/buyer",
     };
 
@@ -68,8 +59,10 @@ const Auth = () => {
       password: formData.password,
     });
 
+    console.log(data);
     if (!error) {
-      navigate("/farmer");
+      setUser(data);
+      navigate("/dashboard");
     } else {
       console.log(formData);
       alert("Error during login.");
@@ -222,6 +215,11 @@ const Auth = () => {
                           placeholder="farmer@example.com"
                           className="pl-10 border-primary/20 focus:border-primary"
                           required
+                          onChange={(e) =>
+                            setFormData((prev) => {
+                              return { ...prev, email: e.target.value };
+                            })
+                          }
                         />
                       </div>
                     </div>
@@ -236,6 +234,11 @@ const Auth = () => {
                           placeholder="••••••••"
                           className="pl-10 border-primary/20 focus:border-primary"
                           required
+                          onChange={(e) =>
+                            setFormData((prev) => {
+                              return { ...prev, password: e.target.value };
+                            })
+                          }
                         />
                       </div>
                     </div>

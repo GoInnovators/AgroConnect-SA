@@ -31,6 +31,7 @@ import spinachImg from "@/assets/spinach.jpg";
 import { supabase } from "@/lib/utils";
 import { farmers } from "@/lib/demoData";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import { useAppModel } from "@/contexts/AppModelContext";
 
 interface Product {
   id: string;
@@ -216,12 +217,16 @@ const MarketplaceSupplier = () => {
   };
 
   const [farmer, setFarmer] = useState(null);
+  const { setAppModel } = useAppModel();
 
   useEffect(() => {
     const pathname = window.location.pathname;
     const farmerId = pathname.substring(pathname.lastIndexOf("/") + 1);
     const farm = farmers.find((farmer) => farmer.id == farmerId);
     setFarmer(farm);
+    setAppModel((prev) => {
+      return { ...prev, farm: farm };
+    });
   }, []);
 
   return (
@@ -338,17 +343,13 @@ const MarketplaceSupplier = () => {
                     <MapPin className="h-4 w-4" />
                     <span>{product.location}</span>
                   </div>
-                  <div className="flex items-center space-x-1">
-                    <Clock className="h-4 w-4" />
-                    <span>Bid by {product.harvestDate}</span>
-                  </div>
                 </div>
 
                 <div className="pt-2 border-t">
                   <div className="flex justify-between items-center mb-3">
                     <div>
                       <p className="text-xl font-bold text-primary">
-                        Current Bid R{product.price}
+                        R{product.price}
                         <span className="text-sm font-normal text-muted-foreground">
                           /{product.unit}
                         </span>
@@ -361,7 +362,7 @@ const MarketplaceSupplier = () => {
                         variant="default"
                       >
                         <ShoppingCart className="h-4 w-4 mr-1" />
-                        Bid
+                        Buy
                       </Button>
                     </div>
                   </div>
@@ -383,10 +384,12 @@ const MarketplaceSupplier = () => {
       </div>
 
       <Dialog open={modalIsOpen}>
-        <DialogTitle>{modal.name}</DialogTitle>
         <DialogContent>
-          <Input placeholder="Price" type="number" />
-          <Button onClick={() => setModalIsOpen(false)}>Submit Bid</Button>
+          <h2 className="text-lg font-bold">Cart</h2>
+
+          <Button onClick={() => setModalIsOpen(false)}>
+            Continue to checkout
+          </Button>
         </DialogContent>
       </Dialog>
     </div>

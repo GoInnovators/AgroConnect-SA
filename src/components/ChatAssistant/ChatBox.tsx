@@ -5,6 +5,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { MessageCircle, Send, X, Bot, User } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useAppModel } from "@/contexts/AppModelContext";
+import { farmers } from "@/lib/demoData";
 
 interface Message {
   id: string;
@@ -18,13 +20,15 @@ const ChatBox = () => {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: "1",
-      content: "Hello! I'm your AgriAI assistant. How can I help you today?",
+      content:
+        "Hello! I'm your AgriAI assistant. How can I help you today? Ask me to take you to and explain a page to you.",
       sender: "bot",
       timestamp: new Date(),
     },
   ]);
   const [inputValue, setInputValue] = useState("");
   const [isTyping, setIsTyping] = useState(false);
+  const { appModel } = useAppModel();
   const navigate = useNavigate();
 
   const handleSendMessage = async () => {
@@ -43,12 +47,25 @@ const ChatBox = () => {
 
     const instruct = JSON.stringify({
       instruction:
-        "Do not answer anything else that is not about the provided context.",
-      expectedResponse: "json(message, functions[])",
+        "Do not answer anything else that is not about the provided context. Return functions if needed, the param is included",
+      expectedResponse:
+        "json(message, functions: [{ name: string, argument: string }])",
+      functionsInstruction: "always return an array of functions",
       context:
-        "You are an assistant to a farmer on every page except '/marketplace' or any other page under marketplace",
+        "You are an assistant to a farmer on every page except '/marketplace' or any other page under marketplace, in that place you're just an assistant",
       functions: ["navigate(pathname)"],
       prompt: inputValue,
+      currentPage: window.location.pathname,
+      additionalInfo: appModel,
+      farmers: farmers,
+      forNavigations: [
+        "/",
+        "/marketplace",
+        "/marketplace/:category",
+        "/map",
+        ".marketplace/supplier/:farm_id",
+      ],
+      important: "Do not answer anything unrelated to this",
     });
     try {
       const res = await fetch("https://agroapi.netlify.app/v1/ai/chat", {
@@ -84,8 +101,8 @@ const ChatBox = () => {
 
       // allowed functions
       const toolRegistry = {
-        goToBooking: () => {
-          navigate("/");
+        navigate: (pathname) => {
+          navigate(pathname);
         },
       };
 

@@ -52,37 +52,7 @@ const Weather = () => {
       return res.response;
     }
   };
-  // Mock weather data for demo
-  const mockWeatherData = {
-    current: {
-      temp: 22,
-      condition: "Partly Cloudy",
-      humidity: 65,
-      windSpeed: 12,
-      visibility: 10,
-      uvIndex: 6,
-      icon: "partly-cloudy",
-    },
-    forecast: [
-      {
-        day: "Today",
-        high: 24,
-        low: 18,
-        condition: "Partly Cloudy",
-        icon: "partly-cloudy",
-      },
-      { day: "Tomorrow", high: 26, low: 19, condition: "Sunny", icon: "sunny" },
-      { day: "Friday", high: 23, low: 16, condition: "Rainy", icon: "rainy" },
-      {
-        day: "Saturday",
-        high: 21,
-        low: 15,
-        condition: "Cloudy",
-        icon: "cloudy",
-      },
-      { day: "Sunday", high: 25, low: 18, condition: "Sunny", icon: "sunny" },
-    ],
-  };
+
   function kelvinToCelsius(k) {
     return Math.round(k - 273.15); // round to whole °C
   }
@@ -216,13 +186,10 @@ const Weather = () => {
   };
 
   useEffect(() => {
-    fetchWeather();
+    fetchWeather().then(() => {
+      localStorage.setItem("_weather", JSON.stringify(weatherData));
+    });
   }, []);
-
-  const handleLocationSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    fetchWeather();
-  };
 
   if (loading) {
     return (
