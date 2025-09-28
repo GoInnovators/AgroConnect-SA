@@ -22,34 +22,16 @@ const Home = () => {
         "Advanced demand forecasting and quality grading using computer vision and machine learning",
     },
     {
-      icon: TrendingUp,
-      title: "Dynamic Pricing",
-      description:
-        "Real-time market pricing based on supply, demand, and quality metrics",
-    },
-    {
-      icon: Shield,
-      title: "Finance & Insurance",
-      description:
-        "Access to credit and insurance products tailored for smallholder farmers",
-    },
-    {
       icon: Truck,
-      title: "Route Optimization",
+      title: "Delivery",
       description:
-        "Efficient logistics and cold-chain solutions to reduce costs and improve freshness",
+        "Offer an efficient and reliable delivery of products to buyers.",
     },
     {
       icon: Users,
       title: "Marketplace Connect",
       description:
         "Direct connection between farmers and verified buyers with secure transactions",
-    },
-    {
-      icon: MapPin,
-      title: "Offline Access",
-      description:
-        "USSD/IVR support for areas with limited internet connectivity",
     },
   ];
 
@@ -65,8 +47,7 @@ const Home = () => {
             </h1>
             <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-3xl mx-auto">
               AgroConnect bridges the gap between farmers and markets through
-              intelligent forecasting, quality grading, and optimized logistics
-              solutions
+              intelligent forecasting, quality grading, and delivery services.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button asChild className="agri-button text-lg px-8 py-4">
@@ -93,8 +74,9 @@ const Home = () => {
               Comprehensive Agricultural Solutions
             </h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              From demand forecasting to route optimization, we provide
-              end-to-end solutions for modern agricultural challenges
+              From ordering products through our marketplace to delivery
+              services, we provide end-to-end solutions for modern agricultural
+              challenges
             </p>
           </div>
 
